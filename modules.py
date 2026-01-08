@@ -10,10 +10,12 @@ min_widget_width = 12
 # ╰──────────╯
 
 cpu_percentage = 0
+cpu_frequency = 0
 
 def update():
-    global cpu_percentage
+    global cpu_percentage, cpu_frequency
     cpu_percentage = psutil.cpu_percent()
+    cpu_frequency = psutil.cpu_freq().current
 
 def cpu_perc(**kwargs) -> list[str]:
     out = ["" for i in range(3)]
@@ -28,7 +30,7 @@ def cpu_perc(**kwargs) -> list[str]:
     color = colorama.Fore.RESET if perc < 10 or kwargs["nocolor"] else colorama.Fore.GREEN if perc < 40 else colorama.Fore.YELLOW if perc < 70 else colorama.Fore.RED
     color_escape_len = len(color) + len(colorama.Fore.RESET)
 
-    perc_string = f"CPU : {color + str(perc).removesuffix(".0") + colorama.Fore.RESET}%"
+    perc_string = f"{"CPU : " if not kwargs["notitle"] else ""}{color + str(perc).removesuffix(".0") + colorama.Fore.RESET}%"
     space = kwargs["width"] - len(perc_string) + color_escape_len
     left_margin = space // 2
     right_margin = space - left_margin
@@ -61,9 +63,24 @@ def cpu_vis(**kwargs) -> list[str]:
 
     return out
 
+def cpu_freq(**kwargs) -> list[str]:
+    out = ["" for i in range(3)]
+    if kwargs["width"] < min_widget_width:
+        return out
+
+    freq = cpu_frequency
+
+    out[1] = str(freq)
+
+    out[0] = f"╭{"─" * kwargs["width"]}╮"
+    out[2] = f"╰{"─" * kwargs["width"]}╯"
+
+    return out
+
 modules = {
     "cpu-perc": cpu_perc,
-    "cpu-vis": cpu_vis
+    "cpu-vis": cpu_vis,
+    "cpu-freq": cpu_freq,
 }
 
 def get(name: str, **kwargs) -> list[str]:
