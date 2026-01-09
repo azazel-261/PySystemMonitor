@@ -2,7 +2,7 @@ from typing import Any
 
 flags = {
     'notitle',
-    'nobreak',
+    'break',
     'nocolor'
 }
 

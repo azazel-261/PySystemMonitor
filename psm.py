@@ -14,7 +14,7 @@ def draw_widgets(widgets_to_draw: list[localtypes.Widget]):
         for x in range(3):
             data[x] += wgt[x]
         i += 1
-        while i < len(widgets_to_draw) and widgets_to_draw[i-1].check_flag("nobreak"):
+        while i < len(widgets_to_draw) and not widgets_to_draw[i-1].check_flag("break"):
             wgt = modules.get(widgets_to_draw[i])
             for x in range(3):
                 data[x] += wgt[x]
@@ -22,7 +22,7 @@ def draw_widgets(widgets_to_draw: list[localtypes.Widget]):
         for t in data:
             print(t)
 
-widgets = configmanager.parse_config("data/widgets.ini")
+widgets = configmanager.parse_json("data/widgets.json")
 
 while True:
     modules.update()

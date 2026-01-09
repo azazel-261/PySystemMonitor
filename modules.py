@@ -2,7 +2,6 @@ import psutil
 import colorama
 
 import localtypes
-from typing import Any
 
 colorama.init()
 
